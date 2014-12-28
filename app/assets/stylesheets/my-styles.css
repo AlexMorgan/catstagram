@@ -1,4 +1,10 @@
 img {
   height: 300px;
   width: auto;
+  display: block;
+}
+
+div[data-post-id] {
+  display: inline-block;
+  margin: 5px;
 }

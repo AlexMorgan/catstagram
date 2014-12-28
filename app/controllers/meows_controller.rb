@@ -29,7 +29,6 @@ class MeowsController < ApplicationController
 
       # Respond with a "204 No Content" to signify that the request has been
       # fulfilled
-      binding.pry
       format.json { head :no_content }
     end
   end
