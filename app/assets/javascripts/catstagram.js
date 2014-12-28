@@ -17,11 +17,13 @@ $(function(){
       url: $form.attr('action'),                                  // '/posts/:post_id/meows'
       dataType: "json",
       // The status code for success handler is '200' - In the Network tab, we can see that we get a '302' code
-      success: function(meow) {
+      success: function(data) {
+        // data returns Object {meow: Object, count: number}
         // You can use Javascript's built in pry-like debugger by adding a debugger
         // statement like in example above and clicking on the "Meow" button while your Chrome Developer Tools console is open
-        // debugger;
 
+        var meow = data.meow;
+        var count = data.count;
         // Create the String version of the form action
         action = '/posts/' + meow.post_id + '/meows/'+ meow.id;
 
@@ -40,6 +42,12 @@ $(function(){
 
         // Replace the old create form with the new remove form
         $form.replaceWith($newForm);
+
+        var tense = checkTense(count);
+
+        updateMeows(meow.post_id, count, tense);
+
+        // $('[data-meows-count="' + meow.post_id + '"]').html(count + ' ' + tense);
       }
     });
   });
@@ -57,7 +65,7 @@ $(function(){
       type: "DELETE",
       url: $form.attr('action'),
       dataType: "json",
-      success: function() {
+      success: function(count) {
         // Find the parent wrapper div so that we can use its data-post-id
         $post = $form.closest('[data-post-id]');
 
@@ -79,17 +87,23 @@ $(function(){
 
         // Replace the old create form with the new remove form
         $form.replaceWith($newForm);
-        $elMeowCount = $('#meowCount');
+
+        var tense = checkTense(count);
+
+        updateMeows($post.data('post-id'), count, tense);
       }
     });
   });
 
+  function checkTense(count) {
+    if (count === 1) {
+     return 'Meow';
+    } else {
+     return 'Meows';
+    }
+  }
 
-  // $('[data-meow-button="create"]').on('submit', function(e) {
-
-  // });
-
-  // $('[data-meow-button="delete"]').on('submit', function(event) {
-
-  // });
+  function updateMeows (postId, count, tense) {
+    $('[data-meows-count="' + postId + '"]').html(count + ' ' + tense);
+  }
 });
